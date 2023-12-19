@@ -20,7 +20,7 @@
                 </Graphic>
               </GraphicFill>
             </Fill>
-            <VendorOption name="graphic-margin">5</VendorOption>
+            <VendorOption name="graphic-margin">20</VendorOption>
           </PolygonSymbolizer>
         </Rule>
       </FeatureTypeStyle>
