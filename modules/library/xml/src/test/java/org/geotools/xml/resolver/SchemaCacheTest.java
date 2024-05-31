@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.net.URI;
 import org.geotools.util.URLs;
+import org.geotools.util.factory.Hints;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -34,6 +35,10 @@ import org.junit.rules.TemporaryFolder;
  * @author Ben Caradoc-Davies (CSIRO Earth Science and Resource Engineering)
  */
 public class SchemaCacheTest {
+
+    public static final String MOCK_SCHEMA_LOCATION = "http://schemacache";
+
+    public static final String MOCK_HTTP_RESPONSE_BODY = "<schemaCacheMockHttpClientResponse>";
 
     @Rule public TemporaryFolder folder = new TemporaryFolder();
 
@@ -91,5 +96,14 @@ public class SchemaCacheTest {
         File defaultXmlFile = new File(workspaceFolder, "default.xml");
         defaultXmlFile.createNewFile();
         assertTrue(SchemaCache.isSuitableDirectoryToContainCache(dataFolder));
+    }
+
+    /** Test download with the HTTP client specified in the GeoTools hints */
+    @Test
+    public void downloadWithHttpClient() {
+        Hints.putSystemDefault(Hints.HTTP_CLIENT_FACTORY, SchemaCacheMockHttpClientFactory.class);
+        byte[] responseBody = SchemaCache.download(MOCK_SCHEMA_LOCATION);
+        Assert.assertArrayEquals(MOCK_HTTP_RESPONSE_BODY.getBytes(), responseBody);
+        Hints.removeSystemDefault(Hints.HTTP_CLIENT_FACTORY);
     }
 }
